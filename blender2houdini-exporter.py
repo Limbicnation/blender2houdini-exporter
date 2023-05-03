@@ -1,5 +1,6 @@
 import bpy
 import os
+import subprocess
 
 class BlenderToHoudiniExporter(bpy.types.Panel):
     bl_idname = "Houdini_panel"
@@ -31,9 +32,16 @@ class SendToHoudini(bpy.types.Operator):
         message = f"Exported to {fbxPath}"
         self.report({'INFO'}, message)
         print(message)
+
+        # launch Houdini
+
+        Houdinipath = 'C:/Program Files/Side Effects Software/Houdini 19.5.569/bin/hindie.exe'
+
+        cmd = [Houdinipath]
+        subprocess.Popen(cmd)
         
         return {'FINISHED'}
-
+        
 def register():
     bpy.utils.register_class(BlenderToHoudiniExporter)
     bpy.utils.register_class(SendToHoudini)
