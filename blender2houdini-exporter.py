@@ -1,23 +1,46 @@
 import bpy
 import os
 
-class BlenderToHoudiniExportter(bpy.types.Panel):
+class BlenderToHoudiniExporter(bpy.types.Panel):
     bl_idname = "Houdini_panel"
     bl_category = "Houdini"
-    bl_label = "Houdini Menu"  # Fix the spelling error
+    bl_label = "Houdini Menu"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
 
     def draw(self, context):
         layout = self.layout
+        layout.operator("object.send_houdini")
+
+class SendToHoudini(bpy.types.Operator):
+    bl_idname = "object.send_houdini"
+    bl_label = "Send To Houdini"
+
+    def execute(self, context):
+        # Verify the path and print it to the console
+        fbxPath = 'I:/Temp_geo/model.fbx'
+        print(f"Exporting to path: {fbxPath}")
+        
+        # Check that the export operator ID is correct
+        print(f"Operator ID: {bpy.ops.export_scene.fbx.idname}")
+        
+        # export the selected object to the specified path
+        bpy.ops.export_scene.fbx(filepath=fbxPath, use_selection=True, global_scale=0.01)
+        
+        # Show a message box confirming the export
+        message = f"Exported to {fbxPath}"
+        self.report({'INFO'}, message)
+        print(message)
+        
+        return {'FINISHED'}
 
 def register():
-    bpy.utils.register_class(BlenderToHoudiniExportter)
+    bpy.utils.register_class(BlenderToHoudiniExporter)
+    bpy.utils.register_class(SendToHoudini)
 
 def unregister():
-    bpy.utils.unregister_class(BlenderToHoudiniExportter)        
-
-# Call register function
+    bpy.utils.unregister_class(BlenderToHoudiniExporter)
+    bpy.utils.unregister_class(SendToHoudini)
 
 if __name__=="__main__":
     register()
