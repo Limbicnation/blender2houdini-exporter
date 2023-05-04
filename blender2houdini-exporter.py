@@ -30,6 +30,8 @@ class SendToHoudini(bpy.types.Operator):
     bl_idname = "object.send_houdini"
     bl_label = "Send To Houdini"
 
+    export = None
+
     def execute(self, context):
         # Verify the path and print it to the console
         fbxPath = 'I:/Temp_geo/model.fbx'
@@ -63,7 +65,23 @@ class SendToHoudini(bpy.types.Operator):
             cmd = [Houdinipath, '-c', 'python', HoudiniScript]
             subprocess.Popen(cmd)
         else:
-            print('Houdini is already running')
+            # Check if Houdini's process is still alive
+            pid_file = os.path.join(os.environ['TEMP'], 'houdini.pid')
+            if os.path.exists(pid_file):
+                with open(pid_file) as f:
+                    pid = int(f.read().strip())
+                try:
+                    os.kill(pid, 0)
+                    print('Houdini is already running')
+                except OSError:
+                    # Process is not running anymore, launch Houdini
+                    os.remove(pid_file)
+                    cmd = [Houdinipath, '-c', 'python', HoudiniScript]
+                    subprocess.Popen(cmd)
+            else:
+                # Houdini is not running and PID file doesn't exist, launch Houdini
+                cmd = [Houdinipath, '-c', 'python', HoudiniScript]
+                subprocess.Popen(cmd)
         
         return {'FINISHED'}
         
