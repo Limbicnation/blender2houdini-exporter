@@ -26,7 +26,7 @@ class SendToHoudini(bpy.types.Operator):
         print(f"Operator ID: {bpy.ops.export_scene.fbx.idname}")
         
         # export the selected object to the specified path
-        bpy.ops.export_scene.fbx(filepath=fbxPath, use_selection=True, global_scale=0.01)
+        bpy.ops.export_scene.fbx(filepath=fbxPath, use_selection=True, global_scale=1)
         
         # Show a message box confirming the export
         message = f"Exported to {fbxPath}"
@@ -44,10 +44,10 @@ class SendToHoudini(bpy.types.Operator):
         if not is_houdini_running:
             # launch Houdini
             Houdinipath = 'C:/Program Files/Side Effects Software/Houdini 19.5.569/bin/hindie.exe'
-            # Local path of your scripts folder
-            HoudiniScript = 'I:/GitHub/Tools/blender2houdini-exporter/blender2houdini-importer.py'
+            # Local path of your scripts folder, Launch Houdini importer script
+            HoudiniScript = 'I:/GitHub/Tools/blender2houdini-exporter/invoke-houdini-shelf.py'
 
-            cmd = [Houdinipath, HoudiniScript]
+            cmd = [Houdinipath, '-c', 'python', HoudiniScript]
             subprocess.Popen(cmd)
         else:
             print('Houdini is already running')
