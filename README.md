@@ -1,2 +1,35 @@
-# blender2houdini-exporter
-Blender to Houdini exporter: A Python script to export 3D models from Blender to Houdini in the OBJ file format.
+# Blender to Houdini Exporter
+
+This is a Blender add-on that exports selected objects to FBX and launches Houdini.
+
+# Features
+
+Export selected objects to FBX.
+Launch Houdini.
+Automatically check if Houdini is already running and open the specified script if it is not.
+
+# Installation
+
+Download the repository.
+In Blender, go to Edit > Preferences > Add-ons > Install.
+Select the downloaded repository and click "Install Add-on".
+Enable the "Blender to Houdini Exporter" add-on.
+
+# Usage
+
+Select the objects you want to export.
+Go to the "Houdini" menu in the sidebar.
+Click "Send To Houdini".
+Houdini will launch and the imported file will be available in the specified location.
+
+# Versioning
+
+This project uses semantic versioning. The current version is v0.1.
+
+# Contributing
+
+Pull requests and bug reports are welcome! Please open an issue before submitting a pull request.
+
+# License
+
+Apache License
