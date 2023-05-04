@@ -1,3 +1,16 @@
+# Information for the Blender to Houdini addon
+bl_info = {
+    "name": "Blender to Houdini Exporter",
+    "author": "Your Name Here",
+    "version": (1, 0),
+    "blender": (2, 80, 0),
+    "location": "View3D > Sidebar > Houdini Menu",
+    "description": "Export selected objects to FBX and launch Houdini",
+    "warning": "",
+    "wiki_url": "",
+    "category": "Import-Export",
+}
+
 import bpy
 import os
 import subprocess
