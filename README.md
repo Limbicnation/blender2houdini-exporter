@@ -1,3 +1,5 @@
+![alt text](https://github.com/Limbicnation/blender2houdini-exporter/blob/main/banner.png)
+
 # Blender to Houdini Exporter
 
 This is a Blender add-on that exports selected objects to FBX and launches Houdini.
@@ -44,4 +46,4 @@ Pull requests and bug reports are welcome! Please open an issue before submittin
 
 # License
 
-Apache License
+Apache License 2.0
