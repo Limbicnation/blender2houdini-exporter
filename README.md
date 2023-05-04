@@ -3,6 +3,8 @@
 This is a Blender add-on that exports selected objects to FBX and launches Houdini.
 To export your work from Houdini to Blender, you can use the provided HDA (Houdini Digital Asset)
 
+Thanks to Simon Houdini for providing insight on his [method](https://www.youtube.com/watch?v=H5aY9wcbX3c&list=LL&index=3)
+
 # Features 
 
 •	Export selected objects to FBX.
