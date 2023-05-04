@@ -36,8 +36,10 @@ class SendToHoudini(bpy.types.Operator):
         # launch Houdini
 
         Houdinipath = 'C:/Program Files/Side Effects Software/Houdini 19.5.569/bin/hindie.exe'
+        # Local path of your scripts folder
+        HoudiniScript = 'I:/GitHub/Tools/blender2houdini-exporter/blender2houdini_importer.py'
 
-        cmd = [Houdinipath]
+        cmd = [Houdinipath, HoudiniScript]
         subprocess.Popen(cmd)
         
         return {'FINISHED'}
