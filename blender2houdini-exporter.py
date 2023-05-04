@@ -33,14 +33,24 @@ class SendToHoudini(bpy.types.Operator):
         self.report({'INFO'}, message)
         print(message)
 
-        # launch Houdini
+        # Check if Houdini is already running
+        is_houdini_running = False
+        p = subprocess.Popen('tasklist', stdout=subprocess.PIPE, shell=True)
+        for line in p.stdout:
+            if b'houdini' in line.lower():
+                is_houdini_running = True
+                break
+        
+        if not is_houdini_running:
+            # launch Houdini
+            Houdinipath = 'C:/Program Files/Side Effects Software/Houdini 19.5.569/bin/hindie.exe'
+            # Local path of your scripts folder
+            HoudiniScript = 'I:/GitHub/Tools/blender2houdini-exporter/blender2houdini-importer.py'
 
-        Houdinipath = 'C:/Program Files/Side Effects Software/Houdini 19.5.569/bin/hindie.exe'
-        # Local path of your scripts folder
-        HoudiniScript = 'I:/GitHub/Tools/blender2houdini-exporter/blender2houdini-importer.py'
-
-        cmd = [Houdinipath, HoudiniScript]
-        subprocess.Popen(cmd)
+            cmd = [Houdinipath, HoudiniScript]
+            subprocess.Popen(cmd)
+        else:
+            print('Houdini is already running')
         
         return {'FINISHED'}
         
