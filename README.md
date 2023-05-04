@@ -2,11 +2,11 @@
 
 This is a Blender add-on that exports selected objects to FBX and launches Houdini.
 
-**Features**
+# Features 
 
- **Export** selected objects to FBX.
-   Launch Houdini.
-   Automatically check if Houdini is already running and open the specified script if it is not.
+•	Export selected objects to FBX.
+•	Launch Houdini.
+•	Automatically check if Houdini is already running and open the specified script if it is not.
 
 # Installation
 
@@ -17,10 +17,10 @@ This is a Blender add-on that exports selected objects to FBX and launches Houdi
 
 # Usage
 
-Select the objects you want to export.
-Go to the "Houdini" menu in the sidebar.
-Click "Send To Houdini".
-Houdini will launch and the imported file will be available in the specified location.
+1. Select the objects you want to export.
+2. Go to the "Houdini" menu in the sidebar.
+3. Click "Send To Houdini".
+4. Houdini will launch and the imported file will be available in the specified location.
 
 # Versioning
 
