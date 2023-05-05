@@ -7,6 +7,8 @@ To export your work from Houdini to Blender, you can use the provided HDA (Houdi
 
 Thanks to Simon Houdini for providing insight on his [method](https://www.youtube.com/watch?v=H5aY9wcbX3c&list=LL&index=3)
 
+The link to my [tutorial](https://www.youtube.com/watch?v=Oue4qUfea4I) 
+
 # Features 
 
 •	Export selected objects to FBX.
