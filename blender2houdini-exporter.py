@@ -11,25 +11,17 @@ bl_info = {
     "category": "Import-Export",
 }
 
-import bpy
 import os
+import bpy
 import subprocess
 
-class BlenderToHoudiniExporter(bpy.types.Panel):
-    bl_idname = "Houdini_panel"
-    bl_category = "Houdini"
-    bl_label = "Houdini Menu"
-    bl_space_type = "VIEW_3D"
-    bl_region_type = "UI"
-
-    def draw(self, context):
-        layout = self.layout
-        layout.operator("object.send_houdini")
 
 class SendToHoudini(bpy.types.Operator):
     bl_idname = "object.send_houdini"
     bl_label = "Send To Houdini"
-
+    
+    Houdinipath = 'C:/Program Files/Side Effects Software/Houdini 19.5.569/bin/hindie.exe'
+    HoudiniScript = 'I:/GitHub/Tools/blender2houdini-exporter/houdini_import_fbx.py'
     export = None
 
     def execute(self, context):
@@ -58,11 +50,7 @@ class SendToHoudini(bpy.types.Operator):
         
         if not is_houdini_running:
             # launch Houdini
-            Houdinipath = 'C:/Program Files/Side Effects Software/Houdini 19.5.569/bin/hindie.exe'
-            # Local path of your scripts folder, Launch Houdini importer script
-            HoudiniScript = 'I:/GitHub/Tools/blender2houdini-exporter/invoke-houdini-shelf.py'
-
-            cmd = [Houdinipath, '-c', 'python', HoudiniScript]
+            cmd = [self.Houdinipath, '-c', 'python', self.HoudiniScript]
             subprocess.Popen(cmd)
         else:
             # Check if Houdini's process is still alive
@@ -76,11 +64,11 @@ class SendToHoudini(bpy.types.Operator):
                 except OSError:
                     # Process is not running anymore, launch Houdini
                     os.remove(pid_file)
-                    cmd = [Houdinipath, '-c', 'python', HoudiniScript]
+                    cmd = [self.Houdinipath, '-c', 'python', self.HoudiniScript]
                     subprocess.Popen(cmd)
             else:
                 # Houdini is not running and PID file doesn't exist, launch Houdini
-                cmd = [Houdinipath, '-c', 'python', HoudiniScript]
+                cmd = [self.Houdinipath, '-c', 'python', self.HoudiniScript]
                 subprocess.Popen(cmd)
         
         return {'FINISHED'}
