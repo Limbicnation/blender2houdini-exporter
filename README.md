@@ -9,6 +9,9 @@ Thanks to Simon Houdini for providing insight on his [method](https://www.youtub
 
 The link to my [tutorial](https://www.youtube.com/watch?v=Oue4qUfea4I) 
 
+Tested with ```Blender 3.5.1```
+```Houdini 19.5.605```
+
 # Features 
 
 •	Export selected objects to FBX.
