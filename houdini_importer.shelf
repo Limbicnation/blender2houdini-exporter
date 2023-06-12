@@ -6,7 +6,7 @@
  a single file. -->
 
   <toolshelf name="houdini-importer" label="Houdini_Importer">
-    <memberTool name="import_new_model"/>
-    <memberTool name="reload_model"/>
+    <memberTool name="import_new_model" icon="Import_new_model.png"/>
+    <memberTool name="reload_model" icon="reload_model.png"/>
   </toolshelf>
 </shelfDocument>
