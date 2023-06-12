@@ -26,7 +26,7 @@ Tested with ```Blender 3.5.1```
 5. Select the scritps ```blender2houdini-exporter.py``` and ```blender_reload_fbx.py``` and "Install Add-on"
 4. Enable the add-on's.
 5. Go to Houdini and install the new digital Asset ```Export_to_Blender.1.0.hdalc``` (Note this project requires Houdini Indie and the Houdini Launcher to run)
-6. Copy the ```houdini_importer.shelf``` to your ```/houdini19.5/toolbar/``` folder and actiavte the shelf
+6. Copy the ```houdini_importer.shelf``` to your ```/houdini19.5/toolbar/``` folder and activate the shelf
 
 # Usage in Blender
 
