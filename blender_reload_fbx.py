@@ -1,14 +1,5 @@
-bl_info = {
-    "name": "Reload FBX",
-    "author": "Your Name",
-    "version": (1, 0),
-    "blender": (3, 0, 0),
-    "location": "View3D > UI > Houdini",
-    "description": "Reload FBX file into the scene",
-    "category": "Object"
-}
-
 import bpy
+import platform
 
 
 class ReloadFBXOperator(bpy.types.Operator):
@@ -17,27 +8,46 @@ class ReloadFBXOperator(bpy.types.Operator):
 
     def execute(self, context):
         # Specify the path to the FBX file
-        fbx_path = 'I:/Temp_geo/model.fbx'
+        if platform.system() == "Windows":
+            fbx_path = 'I:/Temp_geo/model.fbx'
+        elif platform.system() == "Linux":
+            fbx_path = '/media/ws-ml/linux-drive/linux_projects/Temp_geo/model.fbx'  # Update with the Linux path
 
-        # Get the selected object
+        # Check if any objects are selected
+        if not bpy.context.selected_objects:
+            self.report({'ERROR'}, "No objects selected")
+            return {'CANCELLED'}
+
+        # Get the first selected object
         selected_obj = bpy.context.selected_objects[0]
 
-        # Remove the object and its mesh data
+        # Delete the selected object and its mesh data
+        bpy.ops.object.select_all(action='DESELECT')
+        bpy.context.view_layer.objects.active = selected_obj
+        selected_obj.select_set(True)
         bpy.ops.object.delete()
 
-        # Import the FBX file and assign it to a new object
+        # Import the FBX file and create a new object
         bpy.ops.import_scene.fbx(filepath=fbx_path)
-        new_obj = bpy.context.selected_objects[0]
+        new_objs = bpy.context.selected_objects
 
-        # Rename the new object to the original name
+        if not new_objs:
+            self.report({'ERROR'}, "No objects found in the FBX file")
+            return {'CANCELLED'}
+
+        # Assign the original name to the first new object
+        new_obj = new_objs[0]
         new_obj.name = selected_obj.name
+
+        # Set the new object as the active object
+        bpy.context.view_layer.objects.active = new_obj
 
         # Select the new object
         new_obj.select_set(True)
 
         # Switch to object mode
         bpy.ops.object.mode_set(mode='OBJECT')
-        
+
         return {'FINISHED'}
 
 
