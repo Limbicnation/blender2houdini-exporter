@@ -5,8 +5,17 @@
  Note, that two definitions of the same element are not allowed in
  a single file. -->
 
-  <toolshelf name="houdini-importer" label="Houdini_Importer">
-    <memberTool name="import_new_model" icon="Import_new_model.png"/>
-    <memberTool name="reload_model" icon="reload_model.png"/>
+  <toolshelf name="houdini_importer" label="Houdini_Importer">
+    <memberTool name="reload_model"/>
   </toolshelf>
+
+  <tool name="reload_model" label="Reload_Model" icon="$HOME/houdini19.5/config/Icons/reload_model.png">
+    <script scriptType="python"><![CDATA[import hou
+
+# Get the shelf named "MyShelf"
+my_shelf = hou.shelves.shelves()["houdini-importer"]
+
+# Press the Button to reload geometry
+hou.parm('/obj/geo1/file1/reload').pressButton()]]></script>
+  </tool>
 </shelfDocument>
