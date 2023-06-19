@@ -1,0 +1,1 @@
+import subprocess; subprocess.Popen(['blender'])
