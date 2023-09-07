@@ -17,27 +17,26 @@ class ReloadFBXOperator(bpy.types.Operator):
 
     def execute(self, context):
         # Specify the path to the FBX file
-        fbx_path = 'I:/Temp_geo/model.fbx'
+        fbx_path = '/home/ws-ml/Temp_geo/model.fbx'
 
-        # Get the selected object
-        selected_obj = bpy.context.selected_objects[0]
+        # Check if there is a selected object
+        if context.active_object:
+            # Store the active object's name
+            selected_obj_name = context.active_object.name
 
-        # Remove the object and its mesh data
-        bpy.ops.object.delete()
+            # Deselect all objects
+            bpy.ops.object.select_all(action='DESELECT')
 
-        # Import the FBX file and assign it to a new object
-        bpy.ops.import_scene.fbx(filepath=fbx_path)
-        new_obj = bpy.context.selected_objects[0]
+            # Import the FBX file
+            bpy.ops.import_scene.fbx(filepath=fbx_path)
 
-        # Rename the new object to the original name
-        new_obj.name = selected_obj.name
+            # Get the newly imported object
+            new_obj = context.active_object
 
-        # Select the new object
-        new_obj.select_set(True)
+            if new_obj:
+                # Rename the new object to the original name
+                new_obj.name = selected_obj_name
 
-        # Switch to object mode
-        bpy.ops.object.mode_set(mode='OBJECT')
-        
         return {'FINISHED'}
 
 
