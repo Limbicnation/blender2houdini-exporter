@@ -9,8 +9,8 @@ Thanks to Simon Houdini for providing insight on his [method](https://www.youtub
 
 The link to my [tutorial](https://www.youtube.com/watch?v=Oue4qUfea4I) 
 
-Tested with ```Blender 3.5.1```
-```Houdini 19.5.605```
+Tested with ```Blender 3.6.2```
+```Houdini 19.5.716```
 
 # Features 
 
@@ -34,16 +34,18 @@ Tested with ```Blender 3.5.1```
 2. Go to the "Houdini" menu in the sidebar.
 3. Click "Send To Houdini".
 4. Houdini will launch and the imported file will be available in the specified location.
+5. Note: Ensure you set the correct path for your model file in the scripts. Check the geoPath variable in the blender2houdini-exporter.py, houdini_import_fbx.py, and houdini_reload_fbx.py scripts, and adjust them to your needs.
 
 # Usage in Houdini
 
 1. Place down the ```Export_to_Blender``` hda and connect yout output 
 2. Click ```Save to Disk```
 3. In Blender reload model.
+4. Note: Also, ensure you set the correct path for your model file in the Houdini shelf tools and in the scripts houdini_import_fbx.py and houdini_reload_fbx.py if they reference any paths.
 
 # Versioning
 
-This project uses semantic versioning. The current version is v0.1.
+This project uses semantic versioning. The current version is v0.2.
 
 # Contributing
 
