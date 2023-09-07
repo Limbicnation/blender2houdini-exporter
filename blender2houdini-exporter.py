@@ -1,4 +1,3 @@
-# Information for the Blender to Houdini addon
 bl_info = {
     "name": "Blender to Houdini Exporter",
     "author": "Your Name Here",
@@ -17,32 +16,24 @@ import subprocess
 import re
 import platform
 
-
-class SendToHoudini(bpy.types.Operator):
+class SendToHoudiniOperator(bpy.types.Operator):
     bl_idname = "object.send_houdini"
     bl_label = "Send To Houdini"
 
-    Houdinipath = ''
-    HoudiniScript = '/media/ws-ml/linux-drive/linux_projects/GitHub/blender2houdini-exporter/houdini_import_fbx.py'
-    geoPath = '/media/ws-ml/linux-drive/linux_projects/Temp_geo/model.fbx'
-
     def execute(self, context):
-        # Verify the path and print it to the console
-        print(f"Exporting to path: {self.geoPath}")
+        # Paths for Houdini and export files
+        HOUDINI_SCRIPT = '/media/ws-ml/linux-drive/linux_projects/GitHub/blender2houdini-exporter/houdini_import_fbx.py'
+        GEO_PATH = '/home/ws-ml/Temp_geo/model.fbx'
 
-        # Check that the export operator ID is correct
-        print(f"Operator ID: {bpy.ops.export_scene.fbx.idname}")
+        print(f"Exporting to path: {GEO_PATH}")
 
-        # export the selected object to the specified path
-        bpy.ops.export_scene.fbx(filepath=self.geoPath, use_selection=True, global_scale=1)
-
-        # Show a message box confirming the export
-        message = f"Exported to {self.geoPath}"
+        bpy.ops.export_scene.fbx(filepath=GEO_PATH, use_selection=True, global_scale=1)
+        message = f"Exported to {GEO_PATH}"
         self.report({'INFO'}, message)
         print(message)
 
-        # Check if Houdini is already running
         is_houdini_running = False
+        houdini_path = ''
 
         if platform.system() == 'Windows':
             try:
@@ -58,17 +49,18 @@ class SendToHoudini(bpy.types.Operator):
                 is_houdini_running = output.strip() != b''
             except subprocess.CalledProcessError:
                 pass
-            houdini_path = '/opt/hfs19.5.640/bin/houdinifx'
+            houdini_path = '/opt/hfs19.5.716/bin/houdinifx'
 
         if not is_houdini_running:
-            # launch Houdini
-            cmd = [houdini_path, '-c', 'python', self.HoudiniScript]
-            subprocess.Popen(cmd)
+            cmd = [houdini_path, '-c', 'python', HOUDINI_SCRIPT]
+            try:
+                subprocess.Popen(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+            except Exception as e:
+                print("Error launching Houdini:", e)
         else:
             print('Houdini is already running')
 
         return {'FINISHED'}
-
 
 class HOUDINI_PT_Panel(bpy.types.Panel):
     bl_idname = "HOUDINI_PT_Panel"
@@ -81,22 +73,18 @@ class HOUDINI_PT_Panel(bpy.types.Panel):
         layout = self.layout
         layout.operator("object.send_houdini", text="Send To Houdini")
 
-
 classes = (
-    SendToHoudini,
+    SendToHoudiniOperator,
     HOUDINI_PT_Panel,
 )
-
 
 def register():
     for cls in classes:
         bpy.utils.register_class(cls)
 
-
 def unregister():
     for cls in classes:
         bpy.utils.unregister_class(cls)
-
 
 if __name__ == "__main__":
     register()
