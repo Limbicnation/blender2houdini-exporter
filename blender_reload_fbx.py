@@ -9,15 +9,20 @@ bl_info = {
 }
 
 import bpy
-
+import os
 
 class ReloadFBXOperator(bpy.types.Operator):
     bl_idname = "object.reload_fbx"
     bl_label = "Reload FBX"
 
     def execute(self, context):
-        # Specify the path to the FBX file
-        fbx_path = '/home/ws-ml/Temp_geo/model.fbx'
+        # Define the FBX file path based on the operating system
+        if os.name == 'posix':  # Linux or macOS
+            fbx_path = '/home/ws-ml/Temp_geo/model.fbx'
+        elif os.name == 'nt':  # Windows
+            fbx_path = r'I:\Temp_geo\model.fbx'
+        else:
+            raise OSError("Unsupported operating system.")
 
         # Check if there is a selected object
         if context.active_object:
@@ -39,7 +44,6 @@ class ReloadFBXOperator(bpy.types.Operator):
 
         return {'FINISHED'}
 
-
 class MyPanel(bpy.types.Panel):
     bl_label = "Reload FBX"
     bl_idname = "OBJECT_PT_reload_fbx"
@@ -53,16 +57,13 @@ class MyPanel(bpy.types.Panel):
         row.label(text="Click to reload FBX")
         row.operator("object.reload_fbx")
 
-
 def register():
     bpy.utils.register_class(ReloadFBXOperator)
     bpy.utils.register_class(MyPanel)
 
-
 def unregister():
     bpy.utils.unregister_class(ReloadFBXOperator)
     bpy.utils.unregister_class(MyPanel)
-
 
 if __name__ == "__main__":
     register()
