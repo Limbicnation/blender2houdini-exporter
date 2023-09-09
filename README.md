@@ -30,18 +30,25 @@ Tested with ```Blender 3.6.2```
 
 # Usage in Blender
 
-1. Select the objects you want to export.
-2. Go to the "Houdini" menu in the sidebar.
-3. Click "Send To Houdini".
-4. Houdini will launch and the imported file will be available in the specified location.
-5. Note: Ensure you set the correct path for your model file in the scripts. Check the geoPath variable in the blender2houdini-exporter.py, houdini_import_fbx.py, and houdini_reload_fbx.py scripts, and adjust them to your needs.
+To transfer your models from Blender to Houdini:
+
+1. Select the objects you intend to export.
+2. Navigate to the "Houdini" menu located in the sidebar.
+3. Click the "Send To Houdini" option.
+4. Upon executing, Houdini will automatically launch.
+5. Your imported model will reside in the pre-defined location.
+6. Important: To ensure seamless transfer, confirm that the path set for your model file within the scripts is accurate. Specifically, inspect the geoPath variable located in the ```blender2houdini-exporter.py```, ```houdini_import_fbx.py```, and ```houdini_reload_fbx.py``` scripts, making adjustments as necessary.
 
 # Usage in Houdini
 
-1. Place down the ```Export_to_Blender``` hda and connect yout output 
-2. Click ```Save to Disk```
-3. In Blender reload model.
-4. Note: Also, ensure you set the correct path for your model file in the Houdini shelf tools and in the scripts houdini_import_fbx.py and houdini_reload_fbx.py if they reference any paths.
+For the inverse operation, transferring models from Houdini to Blender:
+
+1. Initiate by placing the Export_to_Blender HDA on your workspace.
+2. Connect your desired output to the HDA.
+3. Click on the "Save to Disk" button.
+4. Switch over to Blender.
+5. Reload your model.
+6. Important: Paths play a crucial role in ensuring no hitches during the transfer. Double-check the path for your model file in both the Houdini shelf tools and within the houdini_import_fbx.py and houdini_reload_fbx.py scripts. Ensure all path references are correct and updated.
 
 # Versioning
 
