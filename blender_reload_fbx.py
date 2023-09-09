@@ -1,8 +1,8 @@
 bl_info = {
     "name": "Reload FBX",
     "author": "Your Name",
-    "version": (1, 0),
-    "blender": (3, 0, 0),
+    "version": (1, 1),
+    "blender": (3, 6, 1),
     "location": "View3D > UI > Houdini",
     "description": "Reload FBX file into the scene",
     "category": "Object"
@@ -29,14 +29,17 @@ class ReloadFBXOperator(bpy.types.Operator):
             # Store the active object's name
             selected_obj_name = context.active_object.name
 
-            # Deselect all objects
-            bpy.ops.object.select_all(action='DESELECT')
+            # Switch to OBJECT mode
+            bpy.ops.object.mode_set(mode='OBJECT')
+
+            # Deselect all objects in the current view layer
+            bpy.ops.object.select_all(action='DESELECT')  # Removed `extend=False`
 
             # Import the FBX file
             bpy.ops.import_scene.fbx(filepath=fbx_path)
 
             # Get the newly imported object
-            new_obj = context.active_object
+            new_obj = context.view_layer.objects.active
 
             if new_obj:
                 # Rename the new object to the original name

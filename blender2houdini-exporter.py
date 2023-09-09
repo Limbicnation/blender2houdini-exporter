@@ -2,7 +2,7 @@ bl_info = {
     "name": "Blender to Houdini Exporter",
     "author": "Your Name Here",
     "version": (1, 0),
-    "blender": (2, 80, 0),
+    "blender": (3, 6, 1),
     "location": "View3D > Sidebar > Houdini Menu",
     "description": "Export selected objects to FBX and launch Houdini",
     "warning": "",
@@ -23,7 +23,15 @@ class SendToHoudiniOperator(bpy.types.Operator):
     def execute(self, context):
         # Paths for Houdini and export files
         HOUDINI_SCRIPT = '/media/ws-ml/linux-drive/linux_projects/GitHub/blender2houdini-exporter/houdini_import_fbx.py'
-        GEO_PATH = '/home/ws-ml/Temp_geo/model.fbx'
+        
+        # Set export path based on OS
+        if platform.system() == 'Windows':
+            GEO_PATH = 'I:\\Temp_geo\\model.fbx'
+        elif platform.system() == 'Linux':
+            GEO_PATH = '/home/ws-ml/Temp_geo/model.fbx'
+        else:
+            self.report({'ERROR'}, "Unsupported OS")
+            return {'CANCELLED'}
 
         print(f"Exporting to path: {GEO_PATH}")
 
@@ -45,16 +53,19 @@ class SendToHoudiniOperator(bpy.types.Operator):
             houdini_path = r'C:\Program Files\Side Effects Software\Houdini 19.5.640\bin\houdinifx.exe'
         elif platform.system() == 'Linux':
             try:
-                output = subprocess.check_output('pgrep houdinifx', shell=True)
+                output = subprocess.check_output(['pgrep', 'houdinifx'])
                 is_houdini_running = output.strip() != b''
             except subprocess.CalledProcessError:
                 pass
             houdini_path = '/opt/hfs19.5.716/bin/houdinifx'
 
         if not is_houdini_running:
-            cmd = [houdini_path, '-c', 'python', HOUDINI_SCRIPT]
+            cmd = [houdini_path, '-j', HOUDINI_SCRIPT]
             try:
-                subprocess.Popen(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+                process = subprocess.Popen(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+                stdout, stderr = process.communicate()
+                print("STDOUT:", stdout.decode())
+                print("STDERR:", stderr.decode())
             except Exception as e:
                 print("Error launching Houdini:", e)
         else:
