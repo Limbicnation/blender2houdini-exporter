@@ -50,7 +50,7 @@ class SendToHoudiniOperator(bpy.types.Operator):
                 is_houdini_running = re.search(r'houdinifx\.exe', output) is not None
             except subprocess.CalledProcessError:
                 pass
-            houdini_path = r'C:\Program Files\Side Effects Software\Houdini 19.5.640\bin\houdinifx.exe'
+            houdini_path = r'C:\Program Files\Side Effects Software\Houdini 20.0.590\bin\houdinifx.exe'
         elif platform.system() == 'Linux':
             try:
                 output = subprocess.check_output(['pgrep', 'houdinifx'])
