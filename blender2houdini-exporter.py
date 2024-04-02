@@ -1,8 +1,14 @@
+import os
+import bpy
+import subprocess
+import re
+import platform
+
 bl_info = {
     "name": "Blender to Houdini Exporter",
-    "author": "Your Name Here",
-    "version": (1, 0),
-    "blender": (3, 6, 1),
+    "author": "Gero Doll",
+    "version": (1, 1),
+    "blender": (4, 1, 0),
     "location": "View3D > Sidebar > Houdini Menu",
     "description": "Export selected objects to FBX and launch Houdini",
     "warning": "",
@@ -10,68 +16,77 @@ bl_info = {
     "category": "Import-Export",
 }
 
-import os
-import bpy
-import subprocess
-import re
-import platform
+class HoudiniExporterPreferences(bpy.types.AddonPreferences):
+    bl_idname = __name__
+
+    houdini_path_windows: bpy.props.StringProperty(
+        name="Houdini Path (Windows)",
+        subtype='FILE_PATH',
+        default=r"C:\Program Files\Side Effects Software\Houdini\bin\houdinifx.exe"
+    ) # type: ignore
+
+    houdini_path_linux: bpy.props.StringProperty(
+        name="Houdini Path (Linux)",
+        subtype='FILE_PATH',
+        default="/opt/hfs/bin/houdinifx"
+    ) # type: ignore
+
+    geo_path: bpy.props.StringProperty(
+        name="FBX Export Path",
+        subtype='FILE_PATH',
+        default=""
+    ) # type: ignore
+
+    def draw(self, context):
+        layout = self.layout
+        layout.prop(self, "houdini_path_windows")
+        layout.prop(self, "houdini_path_linux")
+        layout.prop(self, "geo_path")
 
 class SendToHoudiniOperator(bpy.types.Operator):
     bl_idname = "object.send_houdini"
     bl_label = "Send To Houdini"
 
     def execute(self, context):
-        # Paths for Houdini and export files
-        HOUDINI_SCRIPT = '/media/ws-ml/linux-drive/linux_projects/GitHub/blender2houdini-exporter/houdini_import_fbx.py'
-        
-        # Set export path based on OS
-        if platform.system() == 'Windows':
-            GEO_PATH = 'I:\\Temp_geo\\model.fbx'
-        elif platform.system() == 'Linux':
-            GEO_PATH = '/home/gero/Temp_geo/model.fbx'
-        else:
-            self.report({'ERROR'}, "Unsupported OS")
+        preferences = bpy.context.preferences.addons[__name__].preferences
+        geo_path = preferences.geo_path
+        houdini_path = preferences.houdini_path_windows if platform.system() == 'Windows' else preferences.houdini_path_linux
+
+        if not geo_path.endswith('.fbx'):
+            self.report({'ERROR'}, "Export path must end with '.fbx'.")
             return {'CANCELLED'}
 
-        print(f"Exporting to path: {GEO_PATH}")
+        os.makedirs(os.path.dirname(geo_path), exist_ok=True)
+        bpy.ops.export_scene.fbx(filepath=geo_path, use_selection=True, global_scale=1)
+        self.report({'INFO'}, f"Exported FBX to {geo_path}")
 
-        bpy.ops.export_scene.fbx(filepath=GEO_PATH, use_selection=True, global_scale=1)
-        message = f"Exported to {GEO_PATH}"
-        self.report({'INFO'}, message)
-        print(message)
+        if not os.path.isfile(houdini_path):
+            self.report({'ERROR'}, "Houdini path is not valid.")
+            return {'CANCELLED'}
 
-        is_houdini_running = False
-        houdini_path = ''
-
-        if platform.system() == 'Windows':
-            try:
-                output = subprocess.check_output('tasklist', shell=True)
-                output = output.decode('utf-8').lower()
-                is_houdini_running = re.search(r'houdinifx\.exe', output) is not None
-            except subprocess.CalledProcessError:
-                pass
-            houdini_path = r'C:\Program Files\Side Effects Software\Houdini 20.0.653\bin\houdinifx.exe'
-        elif platform.system() == 'Linux':
-            try:
-                output = subprocess.check_output(['pgrep', 'houdinifx'])
-                is_houdini_running = output.strip() != b''
-            except subprocess.CalledProcessError:
-                pass
-            houdini_path = '/opt/hfs20.0.653/bin/houdinifx'
-
+        is_houdini_running = self.check_houdini_running()
         if not is_houdini_running:
-            cmd = [houdini_path, '-j', HOUDINI_SCRIPT]
             try:
-                process = subprocess.Popen(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-                stdout, stderr = process.communicate()
-                print("STDOUT:", stdout.decode())
-                print("STDERR:", stderr.decode())
+                subprocess.Popen([houdini_path, '-j', geo_path])
+                self.report({'INFO'}, "Launched Houdini with the exported FBX.")
             except Exception as e:
-                print("Error launching Houdini:", e)
+                self.report({'ERROR'}, f"Error launching Houdini: {e}")
+                return {'CANCELLED'}
         else:
-            print('Houdini is already running')
+            self.report({'INFO'}, "Houdini is already running.")
 
         return {'FINISHED'}
+
+    def check_houdini_running(self):
+        try:
+            if platform.system() == 'Windows':
+                output = subprocess.check_output("tasklist", shell=True).decode().lower()
+                return "houdinifx.exe" in output
+            else:
+                output = subprocess.check_output(["pgrep", "-x", "houdinifx"]).decode().strip()
+                return output != ""
+        except Exception:
+            return False
 
 class HOUDINI_PT_Panel(bpy.types.Panel):
     bl_idname = "HOUDINI_PT_Panel"
@@ -84,18 +99,15 @@ class HOUDINI_PT_Panel(bpy.types.Panel):
         layout = self.layout
         layout.operator("object.send_houdini", text="Send To Houdini")
 
-classes = (
-    SendToHoudiniOperator,
-    HOUDINI_PT_Panel,
-)
-
 def register():
-    for cls in classes:
-        bpy.utils.register_class(cls)
+    bpy.utils.register_class(HoudiniExporterPreferences)
+    bpy.utils.register_class(SendToHoudiniOperator)
+    bpy.utils.register_class(HOUDINI_PT_Panel)
 
 def unregister():
-    for cls in classes:
-        bpy.utils.unregister_class(cls)
+    bpy.utils.unregister_class(HoudiniExporterPreferences)
+    bpy.utils.unregister_class(SendToHoudiniOperator)
+    bpy.utils.unregister_class(HOUDINI_PT_Panel)
 
 if __name__ == "__main__":
     register()
