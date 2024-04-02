@@ -50,7 +50,7 @@ For the inverse operation, transferring models from Houdini to Blender:
 5. Reload your model.
 6. Important: Paths play a crucial role in ensuring no hitches during the transfer. Double-check the path for your model file in both the Houdini shelf tools and within the houdini_import_fbx.py and houdini_reload_fbx.py scripts. Ensure all path references are correct and updated.
 
-# Images
+# Image instructions and installation details
 
 <p float="left">
   <img src="https://github.com/Limbicnation/blender2houdini-exporter/blob/main/blender2houdini-exporter-Addon.png" width="100%">
