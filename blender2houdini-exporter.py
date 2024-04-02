@@ -28,7 +28,7 @@ class SendToHoudiniOperator(bpy.types.Operator):
         if platform.system() == 'Windows':
             GEO_PATH = 'I:\\Temp_geo\\model.fbx'
         elif platform.system() == 'Linux':
-            GEO_PATH = '/home/ws-ml/Temp_geo/model.fbx'
+            GEO_PATH = '/home/gero/Temp_geo/model.fbx'
         else:
             self.report({'ERROR'}, "Unsupported OS")
             return {'CANCELLED'}
@@ -50,14 +50,14 @@ class SendToHoudiniOperator(bpy.types.Operator):
                 is_houdini_running = re.search(r'houdinifx\.exe', output) is not None
             except subprocess.CalledProcessError:
                 pass
-            houdini_path = r'C:\Program Files\Side Effects Software\Houdini 20.0.590\bin\houdinifx.exe'
+            houdini_path = r'C:\Program Files\Side Effects Software\Houdini 20.0.653\bin\houdinifx.exe'
         elif platform.system() == 'Linux':
             try:
                 output = subprocess.check_output(['pgrep', 'houdinifx'])
                 is_houdini_running = output.strip() != b''
             except subprocess.CalledProcessError:
                 pass
-            houdini_path = '/opt/hfs19.5.716/bin/houdinifx'
+            houdini_path = '/opt/hfs20.0.653/bin/houdinifx'
 
         if not is_houdini_running:
             cmd = [houdini_path, '-j', HOUDINI_SCRIPT]
