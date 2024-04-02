@@ -22,11 +22,11 @@ Tested with ```Blender 3.6.2```
 
 1. Download the repository.
 2. In Blender, go to Edit > Preferences > Add-ons > Install.
-3. Select the downloaded repository and exttract the contents.
-5. Select the scritps ```blender2houdini-exporter.py``` and ```blender_reload_fbx.py``` and "Install Add-on"
-4. Enable the add-on's.
-5. Go to Houdini and install the new digital Asset ```Export_to_Blender.1.0.hdalc``` (Note this project requires Houdini Indie and the Houdini Launcher to run)
-6. Copy the ```houdini_importer.shelf``` to your ```/houdini19.5/toolbar/``` folder and activate the shelf
+3. Select the downloaded repository and extract the contents.
+4. Select the scripts ```blender2houdini-exporter.py``` and ```blender_reload_fbx.py``` and "Install Add-on"
+5. Enable the add-ons.
+6. Go to Houdini and install the new digital Asset ```Export_to_Blender.1.0.hdalc``` (Note this project requires Houdini Indie and the Houdini Launcher to run)
+7. Copy the ```houdini_importer.shelf``` to your ```/houdini19.5/toolbar/``` folder and activate the shelf
 
 # Usage in Blender
 
@@ -50,9 +50,16 @@ For the inverse operation, transferring models from Houdini to Blender:
 5. Reload your model.
 6. Important: Paths play a crucial role in ensuring no hitches during the transfer. Double-check the path for your model file in both the Houdini shelf tools and within the houdini_import_fbx.py and houdini_reload_fbx.py scripts. Ensure all path references are correct and updated.
 
+# Images
+
+<p float="left">
+  <img src="https://github.com/Limbicnation/blender2houdini-exporter/blob/main/blender2houdini-exporter-Addon.png" width="100%">
+  <img src="https://github.com/Limbicnation/blender2houdini-exporter/blob/main/reload-import-model.png" width="100%">
+</p>
+
 # Versioning
 
-This project uses semantic versioning. The current version is v0.2.
+This project uses semantic versioning. The current version is v0.3.
 
 # Contributing
 
