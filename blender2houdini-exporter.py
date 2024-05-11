@@ -1,5 +1,5 @@
 import os
-import bpy
+import bpy # type: ignore
 import subprocess
 import re
 import platform
@@ -8,7 +8,7 @@ bl_info = {
     "name": "Blender to Houdini Exporter",
     "author": "Gero Doll",
     "version": (1, 1),
-    "blender": (4, 1, 0),
+    "blender": (4, 1, 1),
     "location": "View3D > Sidebar > Houdini Menu",
     "description": "Export selected objects to FBX and launch Houdini",
     "warning": "",
