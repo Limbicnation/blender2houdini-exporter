@@ -1,4 +1,4 @@
-![alt text](https://github.com/Limbicnation/blender2houdini-exporter/blob/main/banner.png)
+![alt text](https://github.com/Limbicnation/blender2houdini-exporter/blob/main/images/banner.png)
 
 # Blender to Houdini Exporter
 
@@ -53,8 +53,8 @@ For the inverse operation, transferring models from Houdini to Blender:
 # Image instructions and installation details
 
 <p float="left">
-  <img src="https://github.com/Limbicnation/blender2houdini-exporter/blob/main/blender2houdini-exporter-Addon.png" width="100%">
-  <img src="https://github.com/Limbicnation/blender2houdini-exporter/blob/main/reload-import-model.png" width="100%">
+  <img src="https://github.com/Limbicnation/blender2houdini-exporter/blob/main/images/blender2houdini-exporter-Addon.png" width="100%">
+  <img src="https://github.com/Limbicnation/blender2houdini-exporter/blob/main/images/reload-import-model.png" width="100%">
 </p>
 
 # Versioning
