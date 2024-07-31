@@ -1,1 +1,1 @@
-import subprocess; subprocess.Popen(['blender'])
+import subprocess; subprocess.Popen(['blender'])import os, subprocess; subprocess.Popen([r'C:\Program Files\Blender Foundation\Blender 4.2\blender.exe' if os.name == 'nt' else '/home/ws-ml/Blender/blender'])

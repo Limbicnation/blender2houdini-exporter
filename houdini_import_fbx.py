@@ -1,28 +1,43 @@
 import hou
 import platform
+import os
 
-# Define the 'geo1' node
-geo1_node = hou.node('/obj/geo1')
+def create_file_node_with_fbx():
+    # Define the 'geo1' node
+    geo1_node = hou.node('/obj/geo1')
+    if not geo1_node:
+        raise ValueError("The node '/obj/geo1' does not exist.")
 
-# Create a new file node inside 'geo1'
-file_node = geo1_node.createNode('file')
+    # Create a new file node inside 'geo1'
+    try:
+        file_node = geo1_node.createNode('file')
+    except hou.OperationFailed as e:
+        raise RuntimeError(f"Failed to create file node: {e}")
 
-# Define the path to your FBX file based on the operating system
-if platform.system() == 'Windows':
-    path = 'I:/Temp_geo/model.fbx'
-elif platform.system() == 'Linux':
-    path = '/home/ws-ml/Temp_geo/model.fbx'
-else:
-    raise OSError("Unsupported operating system.")
+    # Define the path to the FBX file based on the operating system
+    fbx_path = None
+    if platform.system() == 'Windows':
+        fbx_path = os.path.join('I:', 'Temp_geo', 'model.fbx')
+    elif platform.system() == 'Linux':
+        fbx_path = os.path.join('/home', 'ws-ml', 'Temp_geo', 'model.fbx')
+    else:
+        raise OSError(f"Unsupported operating system: {platform.system()}")
 
-# Set the path parameter of the file node to the FBX file
-file_node.parm('file').set(path)
+    # Check if the FBX file exists
+    if not os.path.exists(fbx_path):
+        raise FileNotFoundError(f"The specified file does not exist: {fbx_path}")
 
-# Reload the file on the file node
-try:
-    file_node.parm('reload').pressButton()
-except hou.OperationFailed as e:
-    print(f"Failed to reload the file: {e}")
+    # Set the path parameter of the file node to the FBX file
+    file_node.parm('file').set(fbx_path)
 
-# Set the display flag to the newly created file node
-file_node.setDisplayFlag(True)
+    # Reload the file on the file node
+    try:
+        file_node.parm('reload').pressButton()
+    except hou.OperationFailed as e:
+        print(f"Failed to reload the file: {e}")
+
+    # Set the display flag to the newly created file node
+    file_node.setDisplayFlag(True)
+
+# Execute the function to create the file node with FBX
+create_file_node_with_fbx()
