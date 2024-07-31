@@ -9,8 +9,8 @@ Thanks to Simon Houdini for providing insight on his [method](https://www.youtub
 
 The link to my [tutorial](https://www.youtube.com/watch?v=Oue4qUfea4I) 
 
-Tested with ```Blender 4.1.1```
-```Houdini 20.0.688```
+Tested with ```Blender 4.2.0```
+```Houdini 20.5.278```
 
 # Features 
 
