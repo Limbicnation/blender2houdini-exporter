@@ -1,8 +1,8 @@
 bl_info = {
     "name": "Reload FBX",
-    "author": "Your Name",
-    "version": (1, 1),
-    "blender": (3, 6, 1),
+    "author": "Gero Doll",
+    "version": (1, 2),
+    "blender": (4, 2, 0),
     "location": "View3D > UI > Houdini",
     "description": "Reload FBX file into the scene",
     "category": "Object"
@@ -22,30 +22,44 @@ class ReloadFBXOperator(bpy.types.Operator):
         elif os.name == 'nt':  # Windows
             fbx_path = r'I:\Temp_geo\model.fbx'
         else:
-            raise OSError("Unsupported operating system.")
+            self.report({'ERROR'}, "Unsupported operating system.")
+            return {'CANCELLED'}
 
-        # Check if there is a selected object
-        if context.active_object:
-            # Store the active object's name
-            selected_obj_name = context.active_object.name
+        # Check if the FBX file exists
+        if not os.path.exists(fbx_path):
+            self.report({'ERROR'}, f"FBX file not found: {fbx_path}")
+            return {'CANCELLED'}
 
+        try:
             # Switch to OBJECT mode
             bpy.ops.object.mode_set(mode='OBJECT')
 
             # Deselect all objects in the current view layer
-            bpy.ops.object.select_all(action='DESELECT')  # Removed `extend=False`
+            bpy.ops.object.select_all(action='DESELECT')
 
             # Import the FBX file
             bpy.ops.import_scene.fbx(filepath=fbx_path)
 
-            # Get the newly imported object
-            new_obj = context.view_layer.objects.active
+            # Post-import adjustment for colorspace
+            valid_colorspaces = {item.identifier for item in bpy.types.ColorManagedInput.colorspace_items}
+            fallback_colorspace = 'Linear Rec.709 (sRGB)' if 'Linear Rec.709 (sRGB)' in valid_colorspaces else 'Raw'
 
-            if new_obj:
-                # Rename the new object to the original name
-                new_obj.name = selected_obj_name
+            for img in bpy.data.images:
+                try:
+                    if img.colorspace_settings.name not in valid_colorspaces:
+                        img.colorspace_settings.name = fallback_colorspace
+                        print(f"Setting colorspace for {img.name} to fallback: {fallback_colorspace}")
+                except Exception as e:
+                    print(f"Error setting colorspace for {img.name}: {e}")
+                    self.report({'WARNING'}, f"Error setting colorspace for {img.name}. Defaulting to '{fallback_colorspace}'.")
 
-        return {'FINISHED'}
+            self.report({'INFO'}, "FBX file imported successfully.")
+            return {'FINISHED'}
+
+        except Exception as e:
+            self.report({'ERROR'}, f"Failed to import FBX file: {e}")
+            print(f"Error details: {e}")
+            return {'CANCELLED'}
 
 class MyPanel(bpy.types.Panel):
     bl_label = "Reload FBX"

@@ -1,18 +1,16 @@
 import os
-import bpy # type: ignore
+import bpy
 import subprocess
-import re
 import platform
+from pathlib import Path
 
 bl_info = {
     "name": "Blender to Houdini Exporter",
     "author": "Gero Doll",
-    "version": (1, 1),
-    "blender": (4, 1, 1),
+    "version": (1, 2),
+    "blender": (4, 2, 0),
     "location": "View3D > Sidebar > Houdini Menu",
     "description": "Export selected objects to FBX and launch Houdini",
-    "warning": "",
-    "wiki_url": "",
     "category": "Import-Export",
 }
 
@@ -43,6 +41,30 @@ class HoudiniExporterPreferences(bpy.types.AddonPreferences):
         layout.prop(self, "houdini_path_linux")
         layout.prop(self, "geo_path")
 
+class SaveFBXOperator(bpy.types.Operator):
+    bl_idname = "object.save_fbx"
+    bl_label = "Save FBX"
+    bl_description = "Export selected objects to FBX"
+
+    def execute(self, context):
+        preferences = bpy.context.preferences.addons[__name__].preferences
+        geo_path = Path(preferences.geo_path)
+
+        if not geo_path.suffix == '.fbx':
+            self.report({'ERROR'}, "Export path must end with '.fbx'.")
+            return {'CANCELLED'}
+
+        try:
+            geo_path.parent.mkdir(parents=True, exist_ok=True)
+        except Exception as e:
+            self.report({'ERROR'}, f"Failed to create export directory: {e}")
+            return {'CANCELLED'}
+
+        bpy.ops.export_scene.fbx(filepath=str(geo_path), use_selection=True, global_scale=1)
+        self.report({'INFO'}, f"Exported FBX to {geo_path}")
+
+        return {'FINISHED'}
+
 class SendToHoudiniOperator(bpy.types.Operator):
     bl_idname = "object.send_houdini"
     bl_label = "Send To Houdini"
@@ -64,8 +86,7 @@ class SendToHoudiniOperator(bpy.types.Operator):
             self.report({'ERROR'}, "Houdini path is not valid.")
             return {'CANCELLED'}
 
-        is_houdini_running = self.check_houdini_running()
-        if not is_houdini_running:
+        if not self.check_houdini_running():
             try:
                 subprocess.Popen([houdini_path, '-j', geo_path])
                 self.report({'INFO'}, "Launched Houdini with the exported FBX.")
@@ -85,7 +106,8 @@ class SendToHoudiniOperator(bpy.types.Operator):
             else:
                 output = subprocess.check_output(["pgrep", "-x", "houdinifx"]).decode().strip()
                 return output != ""
-        except Exception:
+        except Exception as e:
+            print(f"Error checking Houdini process: {e}")
             return False
 
 class HOUDINI_PT_Panel(bpy.types.Panel):
@@ -97,15 +119,18 @@ class HOUDINI_PT_Panel(bpy.types.Panel):
 
     def draw(self, context):
         layout = self.layout
+        layout.operator("object.save_fbx", text="Save FBX")
         layout.operator("object.send_houdini", text="Send To Houdini")
 
 def register():
     bpy.utils.register_class(HoudiniExporterPreferences)
+    bpy.utils.register_class(SaveFBXOperator)
     bpy.utils.register_class(SendToHoudiniOperator)
     bpy.utils.register_class(HOUDINI_PT_Panel)
 
 def unregister():
     bpy.utils.unregister_class(HoudiniExporterPreferences)
+    bpy.utils.unregister_class(SaveFBXOperator)
     bpy.utils.unregister_class(SendToHoudiniOperator)
     bpy.utils.unregister_class(HOUDINI_PT_Panel)
 
