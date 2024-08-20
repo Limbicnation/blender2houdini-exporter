@@ -2,7 +2,7 @@ bl_info = {
     "name": "Reload FBX",
     "author": "Gero Doll",
     "version": (1, 2),
-    "blender": (4, 2, 0),
+    "blender": (4, 2, 1),
     "location": "View3D > UI > Houdini",
     "description": "Reload FBX file into the scene",
     "category": "Object"
@@ -11,16 +11,44 @@ bl_info = {
 import bpy
 import os
 
+import bpy
+
+class ReloadFBXPreferences(bpy.types.AddonPreferences):
+    bl_idname = __name__.split('.')[0]  # Ensure bl_idname is correctly set
+
+    fbx_path_linux: bpy.props.StringProperty(
+        name="FBX Path (Linux)",
+        subtype='FILE_PATH',
+        default="/home/gero/Temp_geo/model.fbx",
+        description="Path to the FBX file on Linux"
+    ) # type: ignore
+
+    fbx_path_windows: bpy.props.StringProperty(
+        name="FBX Path (Windows)",
+        subtype='FILE_PATH',
+        default="I:\\Temp_geo\\model.fbx",
+        description="Path to the FBX file on Windows"
+    ) # type: ignore
+
+    def draw(self, context):
+        layout = self.layout
+        layout.label(text="FBX File Path Settings")
+        layout.prop(self, "fbx_path_linux")
+        layout.prop(self, "fbx_path_windows")
+
 class ReloadFBXOperator(bpy.types.Operator):
     bl_idname = "object.reload_fbx"
     bl_label = "Reload FBX"
 
     def execute(self, context):
+        # Access the add-on preferences
+        prefs = context.preferences.addons[__name__].preferences
+
         # Define the FBX file path based on the operating system
         if os.name == 'posix':  # Linux or macOS
-            fbx_path = '/home/ws-ml/Temp_geo/model.fbx'
+            fbx_path = prefs.fbx_path_linux
         elif os.name == 'nt':  # Windows
-            fbx_path = r'I:\Temp_geo\model.fbx'
+            fbx_path = prefs.fbx_path_windows
         else:
             self.report({'ERROR'}, "Unsupported operating system.")
             return {'CANCELLED'}
@@ -75,10 +103,12 @@ class MyPanel(bpy.types.Panel):
         row.operator("object.reload_fbx")
 
 def register():
+    bpy.utils.register_class(ReloadFBXPreferences)
     bpy.utils.register_class(ReloadFBXOperator)
     bpy.utils.register_class(MyPanel)
 
 def unregister():
+    bpy.utils.unregister_class(ReloadFBXPreferences)
     bpy.utils.unregister_class(ReloadFBXOperator)
     bpy.utils.unregister_class(MyPanel)
 
