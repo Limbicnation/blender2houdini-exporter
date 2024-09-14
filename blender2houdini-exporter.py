@@ -74,21 +74,35 @@ class SendToHoudiniOperator(bpy.types.Operator):
         geo_path = preferences.geo_path
         houdini_path = preferences.houdini_path_windows if platform.system() == 'Windows' else preferences.houdini_path_linux
 
+        # Ensure geo_path ends with '.fbx'
         if not geo_path.endswith('.fbx'):
             self.report({'ERROR'}, "Export path must end with '.fbx'.")
             return {'CANCELLED'}
 
+        # Ensure the directory for the FBX file exists
         os.makedirs(os.path.dirname(geo_path), exist_ok=True)
+
+        # Export selected objects to FBX
         bpy.ops.export_scene.fbx(filepath=geo_path, use_selection=True, global_scale=1)
         self.report({'INFO'}, f"Exported FBX to {geo_path}")
 
+        # Check if the Houdini path is valid
         if not os.path.isfile(houdini_path):
             self.report({'ERROR'}, "Houdini path is not valid.")
             return {'CANCELLED'}
 
+        # Check if Houdini is already running
         if not self.check_houdini_running():
             try:
-                subprocess.Popen([houdini_path, '-j', geo_path])
+                # Use subprocess.Popen, ensuring that paths are properly handled
+                if platform.system() == 'Windows':
+                    # Ensure path compatibility for Windows
+                    geo_path = geo_path.replace("/", "\\")
+                    subprocess.Popen([houdini_path, '-foreground', geo_path], shell=True)
+                else:
+                    # For Linux, use the normal path
+                    subprocess.Popen([houdini_path, '-j', geo_path])
+
                 self.report({'INFO'}, "Launched Houdini with the exported FBX.")
             except Exception as e:
                 self.report({'ERROR'}, f"Error launching Houdini: {e}")
@@ -101,9 +115,11 @@ class SendToHoudiniOperator(bpy.types.Operator):
     def check_houdini_running(self):
         try:
             if platform.system() == 'Windows':
+                # Check if Houdini is running on Windows using tasklist
                 output = subprocess.check_output("tasklist", shell=True).decode().lower()
                 return "houdinifx.exe" in output
             else:
+                # Check if Houdini is running on Linux using pgrep
                 output = subprocess.check_output(["pgrep", "-x", "houdinifx"]).decode().strip()
                 return output != ""
         except Exception as e:
