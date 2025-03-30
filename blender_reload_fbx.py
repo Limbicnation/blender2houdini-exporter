@@ -1,8 +1,8 @@
 bl_info = {
     "name": "Reload FBX",
     "author": "Gero Doll",
-    "version": (1, 2),
-    "blender": (4, 2, 1),
+    "version": (1, 3),
+    "blender": (4, 4, 0),
     "location": "View3D > UI > Houdini",
     "description": "Reload FBX file into the scene",
     "category": "Object"

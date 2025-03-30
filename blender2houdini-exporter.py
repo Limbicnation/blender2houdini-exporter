@@ -7,8 +7,8 @@ from pathlib import Path
 bl_info = {
     "name": "Blender to Houdini Exporter",
     "author": "Gero Doll",
-    "version": (1, 2),
-    "blender": (4, 2, 0),
+    "version": (1, 3),
+    "blender": (4, 4, 0),
     "location": "View3D > Sidebar > Houdini Menu",
     "description": "Export selected objects to FBX and launch Houdini",
     "category": "Import-Export",
@@ -20,13 +20,13 @@ class HoudiniExporterPreferences(bpy.types.AddonPreferences):
     houdini_path_windows: bpy.props.StringProperty(
         name="Houdini Path (Windows)",
         subtype='FILE_PATH',
-        default=r"C:\Program Files\Side Effects Software\Houdini\bin\houdinifx.exe"
+        default=r"C:\Program Files\Side Effects Software\Houdini 20.5.550\bin\houdinifx.exe"
     ) # type: ignore
 
     houdini_path_linux: bpy.props.StringProperty(
         name="Houdini Path (Linux)",
         subtype='FILE_PATH',
-        default="/opt/hfs/bin/houdinifx"
+        default="/opt/hfs20.5.550/bin/houdinifx"
     ) # type: ignore
 
     geo_path: bpy.props.StringProperty(

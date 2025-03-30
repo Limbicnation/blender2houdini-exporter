@@ -10,16 +10,17 @@
     <memberTool name="reload model0"/>
   </toolshelf>
 
-  <tool name="import model" label="Import Model" icon="D:/Qsync/Python_Development/blender2houdini/icons/import_model_icon.svg">
+  <tool name="import model" label="Import Model" icon="/media/gero/TurboTux/Github/Python_Projects/blender2houdini-exporter/config/Icons/import_model_icon.svg">
     <script scriptType="python"><![CDATA[import hou
 import platform
 import os
 
 def create_file_node_with_fbx():
-    # Define the 'geo1' node
+    # Create or get the 'geo1' node
+    obj_context = hou.node('/obj')
     geo1_node = hou.node('/obj/geo1')
     if not geo1_node:
-        raise ValueError("The node '/obj/geo1' does not exist.")
+        geo1_node = obj_context.createNode('geo', 'geo1')
 
     # Create a new file node inside 'geo1'
     try:
@@ -32,7 +33,7 @@ def create_file_node_with_fbx():
     if platform.system() == 'Windows':
         fbx_path = os.path.join('I:', 'Temp_geo', 'model.fbx')
     elif platform.system() == 'Linux':
-        fbx_path = os.path.join('/home', 'ws-ml', 'Temp_geo', 'model.fbx')
+        fbx_path = os.path.join('/home', 'gero', 'Temp_geo', 'model.fbx')
     else:
         raise OSError(f"Unsupported operating system: {platform.system()}")
 
@@ -57,7 +58,7 @@ create_file_node_with_fbx()
 ]]></script>
   </tool>
 
-  <tool name="reload model0" label="Reload Model" icon="D:/Qsync/Python_Development/blender2houdini/icons/reload_model_icon.svg">
+  <tool name="reload model0" label="Reload Model" icon="/media/gero/TurboTux/Github/Python_Projects/blender2houdini-exporter/config/Icons/reload_model_icon.svg">
     <script scriptType="python"><![CDATA[import hou
 import platform
 import os
@@ -79,7 +80,7 @@ def create_and_reload_file_node():
     if platform.system() == 'Windows':
         fbx_path = os.path.join('I:', 'Temp_geo', 'model.fbx')
     elif platform.system() == 'Linux':
-        fbx_path = os.path.join('/home', 'ws-ml', 'Temp_geo', 'model.fbx')
+        fbx_path = os.path.join('/home', 'gero', 'Temp_geo', 'model.fbx')
     else:
         raise OSError(f"Unsupported operating system: {platform.system()}")
 
@@ -103,8 +104,7 @@ def create_and_reload_file_node():
     print("Display flag set on the file node.")
 
 if __name__ == "__main__":
-    create_and_reload_file_node()
-]]></script>
+    create_and_reload_file_node()]]></script>
   </tool>
 
   <tool name="reload model" label="Reload Model" icon="D:/Qsync/Python_Development/blender2houdini/icons/reload_model_icon.svg">
