@@ -3,10 +3,11 @@ import platform
 import os
 
 def create_file_node_with_fbx():
-    # Define the 'geo1' node
+    # Create or get the 'geo1' node
+    obj_context = hou.node('/obj')
     geo1_node = hou.node('/obj/geo1')
     if not geo1_node:
-        raise ValueError("The node '/obj/geo1' does not exist.")
+        geo1_node = obj_context.createNode('geo', 'geo1')
 
     # Create a new file node inside 'geo1'
     try:
@@ -19,7 +20,7 @@ def create_file_node_with_fbx():
     if platform.system() == 'Windows':
         fbx_path = os.path.join('I:', 'Temp_geo', 'model.fbx')
     elif platform.system() == 'Linux':
-        fbx_path = os.path.join('/home', 'ws-ml', 'Temp_geo', 'model.fbx')
+        fbx_path = os.path.join('/home', 'gero', 'Temp_geo', 'model.fbx')
     else:
         raise OSError(f"Unsupported operating system: {platform.system()}")
 
